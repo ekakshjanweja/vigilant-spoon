@@ -1,9 +1,13 @@
+# vigilant-spoon
+
 To install dependencies:
+
 ```sh
 bun install
 ```
 
 To run:
+
 ```sh
 bun run dev
 ```
@@ -30,10 +34,8 @@ make start CONTAINER_CLI=podman
 make stop
 
 # Remove the container
-make remove
-
+# Open a psql shell
+make psql
 # Open a psql shell
 make psql
 ```
-
-# vigilant-spoon
