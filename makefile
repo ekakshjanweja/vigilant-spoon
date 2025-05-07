@@ -1,16 +1,17 @@
 # Variables
 CONTAINER_NAME=postgres-local-better-auth-flutter
 IMAGE_NAME=postgres-local-image
-HOST_PORT=5432
+HOST_PORT=54321
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
 POSTGRES_DB=betterauthflutterdb
-DATA_DIR=~/dev/.data/better-auth-flutter/postgres-data
+DATA_DIR=$(HOME)/dev/.data/better-auth-flutter/postgres-data
 DOCKERFILE=./Dockerfile
+CONTAINER_CLI ?= podman
 
 # Build the Docker image
 build:
-	docker build -t $(IMAGE_NAME) -f $(DOCKERFILE) .
+	$(CONTAINER_CLI) build -t $(IMAGE_NAME) -f $(DOCKERFILE) .
 
 # Create the data directory if it doesn't exist
 $(DATA_DIR):
@@ -18,7 +19,7 @@ $(DATA_DIR):
 
 # Start the PostgreSQL container
 start: $(DATA_DIR)
-	docker run --name $(CONTAINER_NAME) \
+	$(CONTAINER_CLI) run --name $(CONTAINER_NAME) \
 		-e POSTGRES_USER=$(POSTGRES_USER) \
 		-e POSTGRES_PASSWORD=$(POSTGRES_PASSWORD) \
 		-e POSTGRES_DB=$(POSTGRES_DB) \
@@ -30,26 +31,26 @@ start: $(DATA_DIR)
 
 # Stop the PostgreSQL container
 stop:
-	docker stop $(CONTAINER_NAME) || true
+	$(CONTAINER_CLI) stop $(CONTAINER_NAME) || true
 
 # Remove the PostgreSQL container
 remove:
-	docker rm $(CONTAINER_NAME) || true
+	$(CONTAINER_CLI) rm $(CONTAINER_NAME) || true
 
 # Restart the PostgreSQL container
 restart: stop remove start
 
 # Execute psql in the container
 psql:
-	docker exec -it $(CONTAINER_NAME) psql -U $(POSTGRES_USER) -d $(POSTGRES_DB)
+	$(CONTAINER_CLI) exec -it $(CONTAINER_NAME) psql -U $(POSTGRES_USER) -d $(POSTGRES_DB)
 
 # View logs
 logs:
-	docker logs $(CONTAINER_NAME)
+	$(CONTAINER_CLI) logs $(CONTAINER_NAME)
 
 # Clean everything
 clean: remove
-	sudo docker rmi $(IMAGE_NAME) || true
+	sudo $(CONTAINER_CLI) rmi $(IMAGE_NAME) || true
 	sudo rm -rf $(DATA_DIR)
 
 .PHONY: build start stop remove restart psql logs clean
