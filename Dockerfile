@@ -9,7 +9,7 @@ ENV POSTGRES_DB=mydb
 #COPY ./init-scripts/ /docker-entrypoint-initdb.d/
 
 # Expose PostgreSQL default port
-EXPOSE 54321
+EXPOSE 5432
 
 # Volume for persisting data
 VOLUME ["/var/lib/postgresql/data"]
