@@ -1,4 +1,4 @@
-FROM postgres:latest
+FROM docker.io/library/postgres:latest
 
 # Set environment variables
 ENV POSTGRES_USER=postgres
@@ -9,7 +9,7 @@ ENV POSTGRES_DB=mydb
 #COPY ./init-scripts/ /docker-entrypoint-initdb.d/
 
 # Expose PostgreSQL default port
-EXPOSE 5432
+EXPOSE 54321
 
 # Volume for persisting data
 VOLUME ["/var/lib/postgresql/data"]
